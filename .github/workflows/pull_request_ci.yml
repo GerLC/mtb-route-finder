@@ -3,23 +3,23 @@ name: Angular CI Checks
 on:
   pull_request:
     branches:
-        - main
+      - main
 
 jobs:
   build:
     runs-on: ubuntu-latest
-    
+
     steps:
       - name: ⚙️ Checkout repository
         uses: actions/checkout@v4
 
-      - name: 🛠️ Set up Node.js
-        uses: actions/setup-node@v4
+      - name: 🚀 Install Bun
+        uses: oven-sh/setup-bun@v2
         with:
-          node-version: 20
+          bun-version: latest
 
       - name: 📥 Install Dependencies
-        run: npm ci
+        run: bun install --frozen-lockfile
 
       - name: 🏗️ Build Project
-        run: npm run build -- --configuration production
+        run: bun run build --configuration production
