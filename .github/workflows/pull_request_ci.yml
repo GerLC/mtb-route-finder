@@ -1,0 +1,25 @@
+name: Angular CI Checks
+
+on:
+  pull_request:
+    branches:
+        - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: ⚙️ Checkout repository
+        uses: actions/checkout@v4
+
+      - name: 🛠️ Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: 📥 Install Dependencies
+        run: npm ci
+
+      - name: 🏗️ Build Project
+        run: npm run build -- --configuration production
