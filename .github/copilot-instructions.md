@@ -1,4 +1,3 @@
-
 You are an expert in TypeScript, Angular, and scalable web application development. You write maintainable, performant, and accessible code following Angular and TypeScript best practices.
 
 ## TypeScript Best Practices
@@ -13,7 +12,7 @@ Keep the original best-practices in mind (signals, standalone-default, strict TS
 
 ### Quick Project Summary
 
-- **Framework & version:** Angular 21 (standalone-default, signals) — see [package.json](package.json) and `@angular/*` deps.
+- **Framework & version:** Angular 21 (standalone-default, signals) — see [package.json](../package.json) and `@angular/*` deps.
 - **Runtime modes:** Browser dev server via Bun and Node-compatible SSR via `src/server.ts`.
 - **Build output:** `bun run build` produces `dist/mtb-route-finder`; SSR server entry is expected at `dist/mtb-route-finder/server/server.mjs`.
 
@@ -26,57 +25,62 @@ Keep the original best-practices in mind (signals, standalone-default, strict TS
 - **SSR run (prod):** build then `bun run serve:ssr:mtb-route-finder`.
   - *Alternative:* You can run the bundle directly with `bun dist/mtb-route-finder/server/server.mjs`.
 
-### Architecture & Important Files
+# Copilot / AI Assistant Instructions
 
-- `src/app/` is the app root. The root component is in [src/app/app.ts](src/app/app.ts) using external template [src/app/app.html](src/app/app.html).
-- **Routing:** App routes live in [src/app/app.routes.ts](src/app/app.routes.ts). Server prerender routes are in [src/app/app.routes.server.ts](src/app/app.routes.server.ts).
-- **SSR / Server Bootstrap:** [src/main.server.ts](src/main.server.ts) and [src/app/app.config.server.ts](src/app/app.config.server.ts) configure server rendering providers.
-- **Express Server Wrapper:** [src/server.ts](src/server.ts) — defines static asset handling and the request handler used in production.
-- **Public Assets:** Served from the `public/` folder.
+This file tells coding assistants how the mtb-route-finder repo is structured and what project-specific conventions to follow. Keep answers concise, prefer small edits, and reference files when suggesting changes.
 
-### Project-Specific Conventions
+Key points
 
-- **Standalone-Default:** Components are standalone by default. Do **not** add `standalone: true` to the component metadata (it is the default in this version).
-- **Signals-First:** Use signals for local state (`signal()`, `computed()`) and inputs (`input()`, `output()`). Avoid class-based RxJS state where possible.
-- **Zoneless Change Detection:** The project uses `provideZonelessChangeDetection`.
-  - Do not rely on Zone.js patching.
-  - Prefer pure signal updates.
-  - Side-effects in templates are strictly discouraged.
-- **Feature Layout:** Put features under `src/app/features/` (e.g., `src/app/features/route-finder/`). Register routes in `app.routes.ts`.
+- **Framework:** Angular 21 (standalone-default, signals). See [package.json](../package.json).
+- **Dev tooling:** Bun is used for scripts and local dev. Typical commands: `bun run start`, `bun run build`, `bun run watch`, `bun run test`.
+- **SSR:** Server bootstrap is in [src/server.ts](../src/server.ts); server build output is `dist/mtb-route-finder/server/server.mjs`.
 
-### Coding Principles (DRY & SOLID)
+Architecture & important files
 
-- **DRY:** Extract shared types, UI fragments, and helpers into `src/app/shared/`.
-- **Single Responsibility:** Components should only render. Move logic to composable functions or services (`inject()` usage preferred).
-- **Dependency Inversion:** Inject abstract services or tokens where needed instead of concrete implementations.
-- **Pure Transforms:** Keep `computed()` derivations pure to ensure zoneless detection remains predictable.
+- App root: [src/app/app.ts](../src/app/app.ts) with template [src/app/app.html](../src/app/app.html).
+- Routing: [src/app/app.routes.ts](../src/app/app.routes.ts) (client) and [src/app/app.routes.server.ts](../src/app/app.routes.server.ts) (prerender list).
+- SSR providers: [src/main.server.ts](../src/main.server.ts) and [src/app/app.config.server.ts](../src/app/app.config.server.ts).
+- Public/static assets: `public/` — the server and build expect assets here.
 
-### Build & SSR Notes
+Conventions to follow (strictly)
 
-- To produce the production files, run: `bun run build`.
-- The Angular build configuration in [angular.json](angular.json) ensures the server bundle is placed under `dist/mtb-route-finder/server`.
-- **Dev SSR flow:** During development, prefer `bun run start` (standard dev server). Use the SSR script only for production simulation or testing hydration.
+- **Standalone components by default:** Do not add `standalone: true` — components are standalone in this repo.
+- **Signals-first state:** Use `signal()` and `computed()` for local and derived state. Prefer `inject()` for service access.
+- **Zoneless change detection:** The app uses `provideZonelessChangeDetection`. Avoid relying on Zone.js; keep template expressions side-effect free and `computed()` pure.
+- **Feature layout:** Add features under `src/app/features/<feature>/` and register routes in `src/app/app.routes.ts` using `loadComponent` for lazy features.
 
-### Where to Make Common Changes
+Examples & patterns
 
-- **Add Feature Code:** `src/app/features/<feature>/`. Export a route config and update [src/app/app.routes.ts](src/app/app.routes.ts).
-- **Global Config:** Modify [src/app/app.config.ts](src/app/app.config.ts). Merge server-specific config in [src/app/app.config.server.ts](src/app/app.config.server.ts).
-- **Styling:** Use `src/styles.scss`. Tailwind + DaisyUI are configured.
+- Add a lazy route by exporting a standalone component from `src/app/features/<name>/index.ts` and adding:
 
-### Testing & CI Hints
-
-- Unit tests use Karma: `bun run test`.
-- **CI Steps:** Ensure you run `bun run build` before attempting to start the server bundle.
-
-### Examples (Common Tasks)
-
-**1. Add a route for a lazy feature:**
-Create `src/app/features/my-feature/index.ts` exporting a standalone component.
-Add to [src/app/app.routes.ts](src/app/app.routes.ts):
-
-```typescript
+```ts
 {
   path: 'my-feature',
   loadComponent: () => import('./features/my-feature').then(m => m.MyFeatureComponent)
 }
 ```
+
+- Shared types/helpers live in `src/app/shared/` — prefer extracting small pure transforms and reusing them.
+
+Build / run / test
+
+- Dev server: `bun run start` (runs `ng serve` and opens localhost:4200).
+- Build (prod + server bundle): `bun run build` → outputs `dist/mtb-route-finder`.
+- Run SSR bundle: `bun run serve:ssr:mtb-route-finder` or execute `bun dist/mtb-route-finder/server/server.mjs` directly.
+- Tests: `bun run test` (Karma).
+
+Integration notes
+
+- Be conservative modifying `src/server.ts` and SSR providers — changes affect prerender and server behavior.
+- Static assets and public URLs are served from `public/` and referenced by the server build; update both dev/public files and build pipeline when changing asset structure.
+
+What to avoid
+
+- Do not introduce Zone-dependent patterns or side-effects in templates.
+- Avoid class-based RxJS state as a default — use signals and composables.
+
+When in doubt
+
+- Reference the route files ([src/app/app.routes.ts](../src/app/app.routes.ts)) and [src/app/app.config.server.ts](../src/app/app.config.server.ts) for SSR behavior.
+
+If anything in this file is unclear or you'd like examples expanded (tests, DI tokens, or SSR specifics), ask and I'll add them.
