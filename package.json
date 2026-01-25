@@ -12,6 +12,13 @@
   "prettier": {
     "printWidth": 100,
     "singleQuote": true,
+    "trailingComma": "all",
+    "tabWidth": 2,
+    "semi": true,
+    "bracketSpacing": true,
+    "arrowParens": "avoid",
+    "endOfLine": "lf",
+    "htmlWhitespaceSensitivity": "css",
     "overrides": [
       {
         "files": "*.html",
