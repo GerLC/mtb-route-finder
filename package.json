@@ -7,7 +7,8 @@
     "build": "ng build",
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
-    "serve:ssr:mtb-route-finder": "node dist/mtb-route-finder/server/server.mjs"
+    "serve:ssr:mtb-route-finder": "node dist/mtb-route-finder/server/server.mjs",
+    "lint": "ng lint"
   },
   "prettier": {
     "printWidth": 100,
@@ -43,22 +44,27 @@
     "tslib": "^2.8.1"
   },
   "devDependencies": {
+    "@angular-eslint/builder": "21.2.0",
     "@angular/build": "^21.1.4",
     "@angular/cli": "^21.1.4",
     "@angular/compiler-cli": "^21.1.4",
+    "@eslint/js": "^9.39.2",
+    "@tailwindcss/postcss": "^4.1.18",
     "@types/express": "^5.0.6",
     "@types/jasmine": "~5.1.15",
     "@types/node": "^20.19.33",
+    "angular-eslint": "21.2.0",
+    "daisyui": "^5.5.18",
+    "eslint": "^9.39.2",
     "jasmine-core": "~5.9.0",
     "karma": "~6.4.4",
     "karma-chrome-launcher": "~3.2.0",
     "karma-coverage": "~2.2.1",
     "karma-jasmine": "~5.1.0",
     "karma-jasmine-html-reporter": "~2.1.0",
-    "typescript": "~5.9.3",
-    "@tailwindcss/postcss": "^4.1.18",
-    "daisyui": "^5.5.18",
+    "postcss": "^8.5.6",
     "tailwindcss": "^4.1.18",
-    "postcss": "^8.5.6"
+    "typescript": "~5.9.3",
+    "typescript-eslint": "8.50.1"
   }
 }
