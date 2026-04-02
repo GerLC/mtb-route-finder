@@ -1,12 +1,12 @@
 import { httpResource } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { TrailSchema } from '../../../core/interfaces/trail.schema';
+import { TrailsSchema } from '../../../core/interfaces/trail.schema';
 
 @Injectable({
   providedIn: 'root',
 })
 export class TrailApiService {
   trailsResource = httpResource(() => '/api/trails', {
-    parse: TrailSchema.parse,
+    parse: TrailsSchema.parse,
   });
 }

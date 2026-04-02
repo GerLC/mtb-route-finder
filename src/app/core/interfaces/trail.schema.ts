@@ -8,4 +8,7 @@ export const TrailSchema = z.object({
   lastMaintained: z.iso.datetime().optional(),
 });
 
+export const TrailsSchema = z.array(TrailSchema);
+
 export type Trail = z.infer<typeof TrailSchema>;
+export type Trails = z.infer<typeof TrailsSchema>;
